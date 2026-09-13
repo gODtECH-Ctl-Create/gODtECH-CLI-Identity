@@ -18,5 +18,8 @@
   "keywords": ["godtech", "cli", "terminal", "branding", "developer-tools"],
   "license": "Apache-2.0",
   "repository": { "type": "git", "url": "https://github.com/gODtECH-Ctl-Create/gODtECH-CLI-Identity.git" },
-  "devDependencies": { "typescript": "^5.9.3" }
+  "devDependencies": {
+    "@types/node": "^20.19.11",
+    "typescript": "^5.9.3"
+  }
 }
