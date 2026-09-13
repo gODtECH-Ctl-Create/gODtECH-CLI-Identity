@@ -23,7 +23,8 @@ if (!product) {
   process.exit(2);
 }
 
+const selectedProduct = product;
 const safeWidth = Number.isFinite(width) ? width : 80;
-console.log(composeLogo("GODTECH", product.name, { targetCols: safeWidth }));
+console.log(composeLogo("GODTECH", selectedProduct.name, { targetCols: safeWidth }));
 console.log("");
-console.log(`${product.symbol} ${product.description}`);
+console.log(`${selectedProduct.symbol} ${selectedProduct.description}`);
