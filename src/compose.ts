@@ -82,10 +82,10 @@ function normalize(mask: boolean[][]): boolean[][] {
 
 export function composeLogo(primary: string, secondary: string, options: ComposeOptions = {}): string {
   const targetCols = Math.round(clamp(options.targetCols ?? 80, 40, 128));
-  const scale = clamp(options.scale ?? 0.42, 0.25, 0.7);
-  const maxSecondaryWidthFrac = clamp(options.maxSecondaryWidthFrac ?? 0.58, 0.35, 0.8);
-  const threshold = clamp(options.threshold ?? 0.38, 0.05, 0.95);
-  const secondaryThreshold = clamp(options.secondaryThreshold ?? 0.34, 0.05, 0.95);
+  const scale = clamp(options.scale ?? 0.55, 0.30, 0.70);
+  const maxSecondaryWidthFrac = clamp(options.maxSecondaryWidthFrac ?? 0.58, 0.35, 0.80);
+  const threshold = clamp(options.threshold ?? 0.35, 0.05, 0.95);
+  const secondaryThreshold = clamp(options.secondaryThreshold ?? 0.25, 0.05, 0.95);
   const paddingFrac = clamp(options.paddingFrac ?? 0.08, 0.02, 0.25);
   const spacing = Math.max(0, Math.floor(options.glyphSpacing ?? 1));
 
