@@ -79,3 +79,11 @@ test("invalid CLI options fail with exit code 2", () => {
   assert.equal(result.status, 2);
   assert.match(result.stderr, /Unknown option/u);
 });
+
+test("missing width values fail with exit code 2", () => {
+  const result = spawnSync(process.execPath, ["dist/src/cli.js", "forge", "--width"], {
+    encoding: "utf8",
+  });
+  assert.equal(result.status, 2);
+  assert.match(result.stderr, /Missing value/u);
+});
