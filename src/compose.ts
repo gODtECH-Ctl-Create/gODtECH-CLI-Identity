@@ -8,6 +8,7 @@ export interface ComposeOptions {
   secondaryThreshold?: number;
   paddingFrac?: number;
   glyphSpacing?: number;
+  unicode?: boolean;
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -71,6 +72,12 @@ function toHalfBlocks(mask: boolean[][]): string {
   return output.join("\n");
 }
 
+function toAscii(mask: boolean[][]): string {
+  return mask
+    .map((row) => row.map((cell) => (cell ? "#" : " ")).join("").replace(/\s+$/u, ""))
+    .join("\n");
+}
+
 function widthOf(mask: boolean[][]): number {
   return mask.reduce((max, row) => Math.max(max, row.length), 0);
 }
@@ -88,15 +95,16 @@ export function composeLogo(primary: string, secondary: string, options: Compose
   const secondaryThreshold = clamp(options.secondaryThreshold ?? 0.25, 0.05, 0.95);
   const paddingFrac = clamp(options.paddingFrac ?? 0.08, 0.02, 0.25);
   const spacing = Math.max(0, Math.floor(options.glyphSpacing ?? 1));
+  const unicode = options.unicode ?? true;
 
   const primaryRaw = normalize(renderWord(primary, spacing));
   const primaryAspect = primaryRaw.length / Math.max(1, widthOf(primaryRaw));
-  const textRows = Math.max(5, Math.round((primaryAspect * targetCols) / 2));
-  const miniRows = textRows * 2;
-  const primaryGrid = areaResize(primaryRaw, miniRows, targetCols, threshold);
+  const renderedRows = Math.max(5, Math.round((primaryAspect * targetCols) / 2));
+  const canvasRows = unicode ? renderedRows * 2 : renderedRows;
+  const primaryGrid = areaResize(primaryRaw, canvasRows, targetCols, threshold);
 
   const secondaryRaw = normalize(renderWord(secondary, spacing));
-  const rawSecondaryRows = Math.max(4, Math.round(scale * miniRows));
+  const rawSecondaryRows = Math.max(4, Math.round(scale * canvasRows));
   const rawSecondaryCols = Math.max(
     4,
     Math.round((rawSecondaryRows * widthOf(secondaryRaw)) / Math.max(1, secondaryRaw.length))
@@ -118,10 +126,10 @@ export function composeLogo(primary: string, secondary: string, options: Compose
   const paddingVertical = Math.max(1, Math.round(secondaryRows * paddingFrac));
   const bandRows = secondaryRows + paddingVertical * 2;
   const bandCols = secondaryCols + paddingHorizontal * 2;
-  const startRow = Math.max(0, Math.floor((miniRows - bandRows) / 2));
+  const startRow = Math.max(0, Math.floor((canvasRows - bandRows) / 2));
   const startCol = Math.max(0, Math.floor((targetCols - bandCols) / 2));
 
-  for (let y = startRow; y < Math.min(miniRows, startRow + bandRows); y += 1) {
+  for (let y = startRow; y < Math.min(canvasRows, startRow + bandRows); y += 1) {
     for (let x = startCol; x < Math.min(targetCols, startCol + bandCols); x += 1) {
       primaryGrid[y]![x] = false;
     }
@@ -134,12 +142,12 @@ export function composeLogo(primary: string, secondary: string, options: Compose
       if (secondaryMask[y]?.[x]) {
         const targetY = secondaryStartRow + y;
         const targetX = secondaryStartCol + x;
-        if (targetY < miniRows && targetX < targetCols) primaryGrid[targetY]![targetX] = true;
+        if (targetY < canvasRows && targetX < targetCols) primaryGrid[targetY]![targetX] = true;
       }
     }
   }
 
-  return toHalfBlocks(primaryGrid);
+  return unicode ? toHalfBlocks(primaryGrid) : toAscii(primaryGrid);
 }
 
 export function centerLine(text: string, targetCols = 80): string {
