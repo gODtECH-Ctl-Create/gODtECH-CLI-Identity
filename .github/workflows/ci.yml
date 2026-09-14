@@ -22,3 +22,14 @@ jobs:
       - run: npm ci
       - run: npm run check
       - run: npm test
+
+      - name: Smoke test git dependency install
+        shell: bash
+        run: |
+          set -euo pipefail
+          tmp="$(mktemp -d)"
+          ref="${GITHUB_HEAD_REF:-${GITHUB_REF_NAME}}"
+          npm init -y --prefix "$tmp" >/dev/null
+          npm install --prefix "$tmp" "git+https://github.com/${GITHUB_REPOSITORY}.git#${ref}"
+          test -x "$tmp/node_modules/.bin/godtech-identity"
+          node --input-type=module -e "import('${tmp}/node_modules/@godtech/cli-identity/dist/src/index.js').then(m => { if (typeof m.renderIdentity !== 'function') process.exit(1) })"
