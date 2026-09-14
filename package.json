@@ -12,7 +12,6 @@
     "build": "tsc",
     "check": "tsc --noEmit",
     "test": "npm run build && node scripts/run-tests.mjs",
-    "prepare": "npm run build",
     "prepack": "npm run build"
   },
   "keywords": ["godtech", "cli", "terminal", "branding", "developer-tools"],
