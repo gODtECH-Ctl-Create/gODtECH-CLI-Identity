@@ -47,7 +47,13 @@ for (let index = 0; index < args.length; index += 1) {
     console.error(`Unknown option: ${value}`);
     process.exit(2);
   }
-  if (valueFlags.has(value)) index += 1;
+  if (valueFlags.has(value)) {
+    if (index + 1 >= args.length || args[index + 1]!.startsWith("-")) {
+      console.error(`Missing value for ${value}`);
+      process.exit(2);
+    }
+    index += 1;
+  }
 }
 
 const productArg = readProductArg(args);
