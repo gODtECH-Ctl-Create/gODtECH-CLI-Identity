@@ -1,8 +1,0 @@
-project:
-  state: active
-  priority: medium
-  current_focus: "Shared terminal identity renderer"
-  next_step: "Keep the renderer stable for FORGE, STEWARD and STACKPILOT consumers"
-  blockers: []
-  status_note: "Shared library; changes should preserve machine-readable and quiet modes."
-  last_worked_on: "2026-09-14"
